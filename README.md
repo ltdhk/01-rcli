@@ -8,6 +8,8 @@
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
+
+
 ### 安装 VSCode 插件
 
 - crates: Rust 包管理
@@ -56,6 +58,13 @@ Cargo deny 是一个 Cargo 插件，可以用于检查依赖的安全性。
 
 ```bash
 cargo install --locked cargo-deny
+
+rm -rf ~/.cargo/advisory-db
+cargo install  cargo-audit
+cargo audit
+
+cargo deny init
+# 生成 deny.toml文件。将如下配置防止toml合适位置
 ```
 
 ### 安装 typos
