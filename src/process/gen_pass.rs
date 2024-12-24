@@ -1,6 +1,6 @@
-use rand::{seq::SliceRandom, Rng};
-
 use crate::GenPassOpts;
+use rand::{seq::SliceRandom, Rng};
+use zxcvbn::zxcvbn;
 
 const UPPER: &[u8] = b"ABCDEFGHJKLMNPQRSTUVWXYZ";
 const LOWER: &[u8] = b"abcdefghijkmnpqrstuvwxyz";
@@ -32,6 +32,10 @@ pub fn process_genpass(opts: &GenPassOpts) -> anyhow::Result<()> {
         pass.push(chars[ids]);
     }
     pass.shuffle(&mut rng);
-    println!("{}", String::from_utf8(pass)?);
+    let pass = String::from_utf8(pass)?;
+    println!("{}", pass);
+
+    let result = zxcvbn(&pass, &[]);
+    eprint!("Password strength: {}", result.score());
     Ok(())
 }
