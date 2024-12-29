@@ -1,39 +1,11 @@
 use clap::Parser;
 use std::{fmt, path::Path, str::FromStr};
-
 #[derive(Debug, Clone, Copy)]
 pub enum OutputFormat {
     Json,
     Yaml,
 }
-#[derive(Debug, Parser)]
-#[command(name = "rcli", author, version, about = "a rust cli tool")]
-pub struct Opts {
-    #[command(subcommand)]
-    pub cmd: SubCommand,
-}
 
-#[derive(Debug, Parser)]
-pub enum SubCommand {
-    #[command(name = "csv", about = "csv to json")]
-    Csv(CsvOpts),
-    #[command(name = "genpass", about = "generate password")]
-    GenPass(GenPassOpts),
-}
-
-#[derive(Debug, Parser)]
-pub struct GenPassOpts {
-    #[arg(short, long, default_value_t = 16)]
-    pub length: u8,
-    #[arg(long, default_value_t = true)]
-    pub uppercase: bool,
-    #[arg(long, default_value_t = true)]
-    pub lowercase: bool,
-    #[arg(long, default_value_t = true)]
-    pub numbers: bool,
-    #[arg(long, default_value_t = true)]
-    pub symbols: bool,
-}
 #[derive(Debug, Parser)]
 pub struct CsvOpts {
     #[arg(short, long,value_parser=verify_file_exists)]
