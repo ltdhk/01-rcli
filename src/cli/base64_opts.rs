@@ -1,7 +1,10 @@
 use core::fmt;
 use std::str::FromStr;
 
+use anyhow::Ok;
 use clap::Parser;
+
+use crate::{process_base64_decode, process_base64_encode, CmdExecutor};
 
 use super::verify_input_file;
 
@@ -12,6 +15,19 @@ pub enum Base64Subcommand {
     Encode(Base64EncodeOpts),
     #[command(name = "decode", about = "Encode or decode base64 strings")]
     Decode(Base64DecodeOpts),
+}
+impl CmdExecutor for Base64Subcommand {
+    async fn exec(&self) -> anyhow::Result<()> {
+        match self {
+            Base64Subcommand::Encode(opts) => {
+                process_base64_encode(&opts.input, opts.format)?;
+            }
+            Base64Subcommand::Decode(opts) => {
+                process_base64_decode(&opts.input, opts.format)?;
+            }
+        }
+        Ok(())
+    }
 }
 #[derive(Debug, Parser)]
 pub struct Base64EncodeOpts {

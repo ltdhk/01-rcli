@@ -3,6 +3,8 @@ use std::str::FromStr;
 
 use clap::Parser;
 
+use crate::{process_sign, process_verify, CmdExecutor};
+
 use super::verify_input_file;
 
 #[derive(Debug, Parser)]
@@ -12,6 +14,30 @@ pub enum TextSubcommand {
     Sign(TextSignOpts),
     #[command(name = "verify", about = "")]
     Verify(TextVerifyOpts),
+}
+impl CmdExecutor for TextSubcommand {
+    async fn exec(&self) -> anyhow::Result<()> {
+        match self {
+            TextSubcommand::Sign(opts) => {
+                match opts.format {
+                    TextSignFormat::Blake3 => {
+                        process_sign(&opts.input, &opts.key, opts.format)?;
+                        println!("{:?}", opts)
+                    }
+                    TextSignFormat::Ed25519 => todo!(),
+                };
+            }
+            TextSubcommand::Verify(opts) => {
+                match opts.format {
+                    TextSignFormat::Blake3 => {
+                        process_verify(&opts.input, &opts.key, "", opts.format)?;
+                    }
+                    TextSignFormat::Ed25519 => todo!(),
+                };
+            }
+        }
+        Ok(())
+    }
 }
 #[derive(Debug, Parser)]
 pub struct TextSignOpts {
